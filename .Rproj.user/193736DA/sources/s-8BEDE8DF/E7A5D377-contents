@@ -1,0 +1,24 @@
+---
+title: "Teaching"
+site: distill::distill_website
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+- Lectures for the Bachelor course **Optimization**\
+Irkutsk State University (2015)
+
+- Lectures for the Bachelor course **Linear programming**\
+Irkutsk State University (2016) - [notes in Russian](./files/mos.pdf)
+
+- Exercise classes for the Bachelor course **Linear programming**\
+Irkutsk State University (2016-2019)
+
+- Exercise classes for the Bachelor course **Convex programming**\
+Irkutsk State University (2017)
+
+### Semenar notes
+- [Parallel sets](./files/parallel.pdf)
+- [Optimal transport (in progress)](./files/wasserestein_short.pdf)

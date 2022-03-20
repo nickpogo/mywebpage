@@ -1,0 +1,17 @@
+---
+title: "Contacts"
+site: distill::distill_website
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+**Emails:**\
+n 'dot' pogodaev 'at' icc 'dot' ru\
+nickpogo 'at' gmail 'dot' com
+
+**Address:**\
+[Matrosov Institute for System Dynamics and Control Theory](http://idstu.irk.ru/)\
+134 Lermontov Street,\
+664033 Irkutsk, Russia
