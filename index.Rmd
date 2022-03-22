@@ -1,7 +1,7 @@
 ---
 title: "Nikolay Pogodaev"
 site: distill::distill_website
-description: Welocome to my web page!
+description: Welcome to my web page!
 ---
 
 ```{r setup, include=FALSE}
@@ -15,7 +15,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ```
 
-:::: {style="display: grid; grid-template-columns: 77% 20%; grid-column-gap: 3%;  align-items: center;"}
+:::: {style="display: grid; grid-template-columns: 75% 25%; grid-column-gap: 0%;  align-items: center;"}
 ::: {}
  <font size="2"> 
 **Emails:**\
@@ -28,7 +28,7 @@ nickpogo 'at' gmail 'dot' com\
 </font>
 :::
 ::: {}
-![](files/photo-small.png){width=100%}
+![](files/photo-small-modified.png){width=100%}
 :::
 ::::
 ---

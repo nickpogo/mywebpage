@@ -3,7 +3,7 @@
     "path": "~/Documents/webpage/index.Rmd",
     "project_path": "index.Rmd",
     "type": "r_markdown",
-    "hash": "709538675",
+    "hash": "3427845114",
     "contents": "",
     "dirty": false,
     "created": 1647657970865.0,
@@ -12,15 +12,15 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "28,3",
-        "scrollLine": "18"
+        "cursorPosition": "30,27",
+        "scrollLine": "15"
     },
     "folds": "",
-    "lastKnownWriteTime": 1647916007,
+    "lastKnownWriteTime": 1647959110,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1647916007657,
+    "last_content_update": 1647959110518,
     "read_only": false,
     "read_only_alternatives": []
 }

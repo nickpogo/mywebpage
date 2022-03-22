@@ -1,7 +1,7 @@
 ---
 title: "Research"
 output: distill::distill_article
-description: <a href="https://scholar.google.com/citations?user=6MWrjq4AAAAJ&hl=en"><img src="files/google3.png" width="25"></a> <a href="https://www.researchgate.net/profile/Nikolay-Pogodaev"><img src="files/researchgate.png" width="25"></a> <a href="https://www.scopus.com/authid/detail.uri?authorId=22635515900"><img src="files/scopus.png" width="25"></a>
+description: <a href="https://scholar.google.com/citations?user=6MWrjq4AAAAJ&hl=en"><img src="files/google4.png" width="25"></a> <a href="https://www.researchgate.net/profile/Nikolay-Pogodaev"><img src="files/researchgate2.png" width="25"></a> <a href="https://www.scopus.com/authid/detail.uri?authorId=22635515900"><img src="files/scopus.png" width="25"></a>
 ---
 
 ```{r setup, include=FALSE}
