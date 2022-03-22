@@ -1,0 +1,4 @@
+"0","knitr::opts_chunk$set(echo = TRUE)"
+"0","library(JuliaCall)"
+"0","julia_setup(JULIA_HOME = ""/home/nickpogo/Programs/julia-1.7.2/bin/"")"
+"0","julia <- julia_setup()"

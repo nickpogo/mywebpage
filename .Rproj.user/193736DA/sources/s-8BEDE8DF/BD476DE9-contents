@@ -1,14 +1,14 @@
 ---
 title: "Research"
 output: distill::distill_article
-date: '2022-03-19'
+description: <a href="https://scholar.google.com/citations?user=6MWrjq4AAAAJ&hl=en"><img src="files/google3.png" width="25"></a> <a href="https://www.researchgate.net/profile/Nikolay-Pogodaev"><img src="files/researchgate.png" width="25"></a> <a href="https://www.scopus.com/authid/detail.uri?authorId=22635515900"><img src="files/scopus.png" width="25"></a>
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Journal papers
+## Journal papers 
 
 
 1. **Nonolocal parametric balance equations in the space of signed measures**. to be published in Sbornik: Mathematics (with M. Staritsyn)
@@ -39,6 +39,4 @@ knitr::opts_chunk$set(echo = TRUE)
 22. [On a Class of Impulsive Control Problems for Continuity Equations](https://www.sciencedirect.com/science/article/pii/S2405896318331264). IFAC-PapersOnLine, 51 (2018), no. 32, pp. 468-473 (with M.V. Staritsyn).
 23. [Numerical Algorithm for Optimal Control of Continuity Equations](http://ceur-ws.org/Vol-1987/paper67.pdf). Proc. of 8th Intern. Conf. on Optimization and Applications, OPTIMA-2017, pp. 467-474.
 24. [Conservation laws in the modeling of moving crowds](https://publik.tuwien.ac.at/files/PubDat_228935.pdf). AIMS Series on Applied Mathematics: Proc. of the 14th International Conference "Hyperbolic Problems: Theory, Numerics, Applications (2014), vol. 8, pp. 467-474 (with R.M. Colombo, M. Garavello, M. Lecureux-Mercier).
-
-## Preprints
 

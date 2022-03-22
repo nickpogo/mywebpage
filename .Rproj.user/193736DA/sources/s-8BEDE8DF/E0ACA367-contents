@@ -1,8 +1,7 @@
 ---
 title: "Nikolay Pogodaev"
-description: |
-  This is my personal webpage
 site: distill::distill_website
+description: Welocome to my web page!
 ---
 
 ```{r setup, include=FALSE}
@@ -16,4 +15,21 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ```
 
+:::: {style="display: grid; grid-template-columns: 77% 20%; grid-column-gap: 3%;  align-items: center;"}
+::: {}
+ <font size="2"> 
+**Emails:**\
+n 'dot' pogodaev 'at' icc 'dot' ru\
+nickpogo 'at' gmail 'dot' com\
+**Address:**\
+[Matrosov Institute for System Dynamics and Control Theory](http://idstu.irk.ru/)\
+134 Lermontov Street,\
+664033 Irkutsk, Russia
+</font>
+:::
+::: {}
+![](files/photo-small.png){width=100%}
+:::
+::::
+---
 I am a senior research fellow at [Matrosov Institute for System Dynamics and Control Theory](http://idstu.irk.ru/) (Irkutsk, Russia). My primal research interest is mathematical control theory, especially, when it deals with PDEs and mingles with optimal transportation. Doing my Ph.D. made me appreciate set-valued analysis and my postdoc research gave me a taste of geometric measure theory and nonlinear conservation laws. When I'm getting tired of proving theorems, I do some programming for tackling optimal control problems by numerical tools.

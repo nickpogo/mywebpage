@@ -1,0 +1,115 @@
+---
+title: "R Notebook test"
+output: 
+  distill::distill_article
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(JuliaCall)
+julia_setup(JULIA_HOME = "/home/nickpogo/Programs/julia-1.7.2/bin/")
+julia <- julia_setup()
+```
+
+
+**Problem.** Our goal is to solve the following linear boundary value problem
+$$
+-\frac{d}{dx}\left(\kappa(x)\frac{d}{dx}u(x)\right) = f(x),
+\quad u(0) = u(l) = 0,
+$$
+by using the Finite Element Method with base functions
+$$
+\phi_j(x) = 
+\begin{cases}
+\frac{x-x_{j-1}}{h}, & x_{j-1}\leq x\leq x_j,\\
+\frac{x_{j+1}-x}{h}, & x_{j}\leq x\leq x_{j+1},\\
+0, &\text{otherwise},
+\end{cases}
+\quad j = 1,\ldots, n
+$$
+where $\{x_j = jh\}_{j=0}^{n+1}$ is a uniform grid with step $h = l/(n+1)$.
+For computations take $\kappa(x)=x+1$, $f(x)=1$, $l=1$. Compare the numerical solution with the analytical one:
+$$
+u(x) = -x + \frac{\log(x+1)}{\log 2}.
+$$
+
+**Solution.** The solution of our differential equation is a minimizer of the functional
+$$
+Q[u] = \int_0^l \left[\frac{1}{2}\kappa(x)u'(x)^2 - f(x)u(x)\right]\,dx.
+$$
+For finding the minimizer $u$ we approximate it by the finite sum
+$$
+w(x) = c_1\phi_1(x) +\cdots c_{n}\phi_{n}(x).
+$$
+By plugging it into the functional, we obtain the quadratic minimization problem
+$$
+\sum_{i,j} k_{ij}c_ic_j - \sum_i b_ic_i \to \min,
+$$
+where
+$$
+k_{ij} = \frac{1}{h^2}\int_0^l\kappa(x)\phi_i'(x)\phi_j'(x)\,dx,\quad
+b_j = \frac{1}{h}\int_0^l f(x)\phi_j(x)\,dx.
+$$
+Taking into account the form of the base function, we find that
+$$
+k_{jj} = s_{j} + s_{j+1},\quad j = 1,\dots,n,\quad k_{j,j+1} = k_{j+1,j}= -s_{j+1},\quad j=1,\ldots,n-1,
+$$
+where
+$$s_j = \frac{1}{h^2}\int_{x_{j-1}}^{x_{j}} \kappa(x)\,dx,\quad j=1,\ldots,n.$$
+Other elements of $K$ are zeros. Moreover,
+$$
+b_j = \frac{1}{h}\int_{x_{j-1}}^{x_j}(x-x_{j-1})f(x)\,dx + \frac{1}{h}\int_{x_{j}}^{x_{j+1}}(x_{j+1}-x)f(x)\,dx, \quad j=1,\ldots,n.
+$$
+
+In our case
+$$h^2 s_j = \int_{x_{j-1}}^{x_{j}}(1+x)\,dx = h + \frac{1}{2}(x_{j}^2-x_{j-1}^2)= h +\frac{2j-1}{2}h^2.$$
+$$b_j = h.$$
+By Fermat's rule, the solution of the optimization problem is given by $c = K^{-1}b$.
+
+The corresponding Julia code may look like as follows:
+
+```{julia}
+using Plots; 
+n = 5;
+l = 1;
+h = l/(n+1);
+
+function phi(j,x)
+    if h*(j-1) <= x <= h*j
+        (x - h*(j-1))/h
+    elseif h*j <= x <= h*(j+1)
+        (h*(j+1)-x)/h
+    else
+        0.0
+    end
+end; 
+
+s = zeros(n+1);
+for j=1:(n+1)
+    s[j] = h + h^2*(2*j-1)/2;
+end
+s = s / h^2;
+
+K = zeros(n,n);
+b = zeros(n);
+for j=1:n
+    K[j,j] = s[j] + s[j+1];
+    if j != n
+        K[j,j+1] = -s[j+1];
+        K[j+1,j] = -s[j+1];
+    end
+    b[j] = h;
+end
+
+c = inv(K) * b;
+
+function w(x) 
+    sum(c[i]*phi(i,x) for i=1:n)
+end;
+
+x = 0:0.02:1;
+y = map(w,x);
+plot(x,y);
+plot!(x, -x + log.(1 .+ x)/log(2))
+```

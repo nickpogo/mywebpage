@@ -13,8 +13,8 @@ navbar:
       href: teaching.html
     - text: "CV"
       href: files/resume-en.pdf
-    - text: "Contacts"
-      href: contacts.html
+#    - text: "Contacts"
+#      href: contacts.html
     - text: "Misc"
       href: misc.html
 output: distill::distill_article
