@@ -32,4 +32,4 @@ nickpogo 'at' gmail 'dot' com\
 :::
 ::::
 ---
-I am a senior research fellow at [Matrosov Institute for System Dynamics and Control Theory](http://idstu.irk.ru/) (Irkutsk, Russia). My primal research interest is mathematical control theory, especially, when it deals with PDEs and mingles with optimal transportation. Doing my Ph.D. made me appreciate set-valued analysis and my postdoc research gave me a taste of geometric measure theory and nonlinear conservation laws. When I'm getting tired of proving theorems, I do some programming for tackling optimal control problems by numerical tools.
+I am a senior research fellow at [Matrosov Institute for System Dynamics and Control Theory](http://idstu.irk.ru/) (Irkutsk, Russia). My primary research interest is mathematical control theory, especially, when it deals with PDEs and mingles with optimal transportation. Doing my Ph.D. made me appreciate set-valued analysis and my postdoc research gave me a taste of geometric measure theory and nonlinear conservation laws. When I'm getting tired of proving theorems, I do some programming for tackling optimal control problems by numerical tools.
