@@ -14,6 +14,8 @@ a = sqrt(17)
 ```
 -->
 
+- A [soultion](./files/Kakuro.ipynb) of the Kakuro game problem from [here](https://www.classiq.io/competition).
+
 ## Useful tools
 
 - [p5.js](https://p5js.org): great visualization library 
