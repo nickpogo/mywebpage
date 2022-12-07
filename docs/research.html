@@ -50,16 +50,17 @@ pre.numberSource code > span > a:first-child::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {   }
+  { color: #00769e; background-color: #f1f3f5; }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
+code span { color: #00769e; } /* Normal */
 code span.al { color: #ad0000; } /* Alert */
 code span.an { color: #5e5e5e; } /* Annotation */
-code span.at { } /* Attribute */
+code span.at { color: #657422; } /* Attribute */
 code span.bn { color: #ad0000; } /* BaseN */
 code span.bu { } /* BuiltIn */
-code span.cf { color: #007ba5; } /* ControlFlow */
+code span.cf { color: #00769e; } /* ControlFlow */
 code span.ch { color: #20794d; } /* Char */
 code span.cn { color: #8f5902; } /* Constant */
 code span.co { color: #5e5e5e; } /* Comment */
@@ -73,9 +74,9 @@ code span.fl { color: #ad0000; } /* Float */
 code span.fu { color: #4758ab; } /* Function */
 code span.im { } /* Import */
 code span.in { color: #5e5e5e; } /* Information */
-code span.kw { color: #007ba5; } /* Keyword */
+code span.kw { color: #00769e; } /* Keyword */
 code span.op { color: #5e5e5e; } /* Operator */
-code span.ot { color: #007ba5; } /* Other */
+code span.ot { color: #00769e; } /* Other */
 code span.pp { color: #ad0000; } /* Preprocessor */
 code span.sc { color: #5e5e5e; } /* SpecialChar */
 code span.ss { color: #20794d; } /* SpecialString */
@@ -787,6 +788,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   d-article table.gt_table td,
   d-article table.gt_table th {
     border-bottom: none;
+    font-size: 100%;
   }
 
   .html-widget {
@@ -1028,10 +1030,6 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     position: relative;
     margin-bottom: 2.5em;
     margin-top: 1.5em;
-  }
-
-  .figure img {
-    width: 100%;
   }
 
   .figure .caption {
@@ -1863,9 +1861,21 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
       // hoverable references
       $('span.citation[data-cites]').each(function() {
+        const citeChild = $(this).children()[0]
+        // Do not process if @xyz has been used without escaping and without bibliography activated
+        // https://github.com/rstudio/distill/issues/466
+        if (citeChild === undefined) return true
+
+        if (citeChild.nodeName == "D-FOOTNOTE") {
+          var fn = citeChild
+          $(this).html(fn.shadowRoot.querySelector("sup"))
+          $(this).id = fn.id
+          fn.remove()
+        }
         var refs = $(this).attr('data-cites').split(" ");
         var refHtml = refs.map(function(ref) {
-          return "<p>" + $('#ref-' + ref).html() + "</p>";
+          // Could use CSS.escape too here, we insure backward compatibility in navigator
+          return "<p>" + $('div[id="ref-' + ref + '"]').html() + "</p>";
         }).join("\n");
         window.tippy(this, {
           allowHTML: true,
@@ -1877,6 +1887,31 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
           placement: 'bottom-start'
         });
       });
+
+      // fix footnotes in tables (#411)
+      // replacing broken distill.pub feature
+      $('table d-footnote').each(function() {
+        // we replace internal showAtNode methode which is triggered when hovering a footnote
+        this.hoverBox.showAtNode = function(node) {
+          // ported from https://github.com/distillpub/template/pull/105/files
+          calcOffset = function(elem) {
+              let x = elem.offsetLeft;
+              let y = elem.offsetTop;
+              // Traverse upwards until an `absolute` element is found or `elem`
+              // becomes null.
+              while (elem = elem.offsetParent && elem.style.position != 'absolute') {
+                  x += elem.offsetLeft;
+                  y += elem.offsetTop;
+              }
+
+              return { left: x, top: y };
+          }
+          // https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/offsetTop
+          const bbox = node.getBoundingClientRect();
+          const offset = calcOffset(node);
+          this.show([offset.left + bbox.width, offset.top + bbox.height]);
+        }
+      })
 
       // clear polling timer
       clearInterval(tid);
@@ -1976,6 +2011,8 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     // mark non-body figures created by knitr chunks as 100% width
     $('.layout-chunk').each(function(i, val) {
       var figures = $(this).find('img, .html-widget');
+      // ignore leaflet img layers (#106)
+      figures = figures.filter(':not(img[class*="leaflet"])')
       if ($(this).attr('data-layout') !== "l-body") {
         figures.css('width', '100%');
       } else {
@@ -1998,7 +2035,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     // get rid of index.html references in header
     if (window.location.protocol !== "file:") {
       $('.distill-site-header a[href]').each(function(i,val) {
-        $(this).attr('href', $(this).attr('href').replace("index.html", "./"));
+        $(this).attr('href', $(this).attr('href').replace(/^index[.]html/, "./"));
       });
     }
 
@@ -2037,7 +2074,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </script>
 
   <!--/radix_placeholder_distill-->
-  <script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
+  <script src="site_libs/header-attrs-2.17/header-attrs.js"></script>
   <script src="site_libs/popper-2.6.0/popper.min.js"></script>
   <link href="site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
   <link href="site_libs/tippy-6.2.7/tippy-light-border.css" rel="stylesheet" />
@@ -2085,160 +2122,49 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <h1>Research</h1>
 <!--radix_placeholder_categories-->
 <!--/radix_placeholder_categories-->
-<p><a href="https://scholar.google.com/citations?user=6MWrjq4AAAAJ&hl=en"><img src="files/google4.png" width="25"></a>
-<a href="https://www.researchgate.net/profile/Nikolay-Pogodaev"><img src="files/researchgate2.png" width="25"></a>
-<a href="https://www.scopus.com/authid/detail.uri?authorId=22635515900"><img src="files/scopus.png" width="25"></a></p>
+<p><a href="https://scholar.google.com/citations?user=6MWrjq4AAAAJ&hl=en"><img src="files/google4.png" width="25"></a> <a href="https://www.researchgate.net/profile/Nikolay-Pogodaev"><img src="files/researchgate2.png" width="25"></a> <a href="https://www.scopus.com/authid/detail.uri?authorId=22635515900"><img src="files/scopus.png" width="25"></a></p>
 </div>
 
 
 <div class="d-article">
 <h2 id="journal-papers">Journal papers</h2>
 <ol type="1">
-<li><p><a
-href="https://iopscience.iop.org/article/10.1070/SM9516/meta">Nonlocal
-balance equations with parameters in the space of signed measures</a>.
-Sbornik: Mathematics, 213 (2022), no. 1, pp. 63-87 (with M.
-Staritsyn)</p></li>
-<li><p><a
-href="https://ieeexplore.ieee.org/abstract/document/9454440">Feedback
-Maximum Principle for Ensemble Control of Local Continuity Equations: An
-Application to Supervised Machine Learning</a>. IEEE Control Syst.
-Lett., 6 (2021), pp. 1046-1051 (with M. Staritsyn, R. Chertovskih, F.L.
-Pereira)</p></li>
-<li><p><a
-href="https://www.aimsciences.org/article/doi/10.3934/dcds.2021066?viewType=html">Modeling
-of crowds in regions with moving obstacles</a>. Discrete Contin. Dyn.
-Syst., 41 (2021), no. 14, pp. 5009-5036 (with N. Maltugueva)</p></li>
-<li><p><a
-href="https://www.sciencedirect.com/science/article/pii/S002203962030108X">Impulsive
-control of nonlocal transport equations</a>. Journal of Differential
-Equations, 269 (2020), no. 4, pp. 3585-3623 (with M.V.
-Staritsyn)</p></li>
-<li><p><a
-href="https://link.springer.com/article/10.1007/s11590-018-1318-y">Program
-strategies for a dynamic game in the space of measures</a>. Optimization
-Letters. 13 (2019), no. 8. pp. 1913-1925.</p></li>
-<li><p><a
-href="https://link.springer.com/article/10.1007/s10958-019-04298-7">Bang-Bang
-Theorem for a Coupled ODE-PDE Control System</a>. Journal of
-Mathematical Sciences 23 (2019), no, 2. pp. 146-158.</p></li>
-<li><p><a
-href="https://www.sciencedirect.com/science/article/pii/S0022039618302067">Estimates
-of the Domain of Dependence for Scalar Conservation Laws</a>. Journal of
-Differential Equations, 265 (2018), no. 4, pp. 1654-1677.</p></li>
-<li><p><a
-href="https://link.springer.com/article/10.1134/S0012266116080048">On
-the regularity of the boundary of the integral funnel of a differential
-inclusion</a>. Differential Equations, 52 (2016), no. 8,
-pp. 987-999.</p></li>
-<li><p><a
-href="https://link.springer.com/article/10.1007/s00030-016-0357-2">Optimal
-control of continuity equations</a>. Nonlinear Differ. Equ. Appl. (2016)
-23: 21.</p></li>
-<li><p><a
-href="http://www.aimsciences.org/article/doi/10.3934/dcds.2015.35.73">On
-the modeling of moving populations through set evolution equations</a>.
-Discrete Contin. Dyn. Syst., 35 (2015), no. 1, pp. 73-98 (with R.M.
-Colombo and T. Lorenz).</p></li>
-<li><p><a
-href="https://link.springer.com/article/10.1134/S0037446614040090">The
-variational stability of an optimal control problem for Volterra-type
-equations</a>. Siberian Mathematical Journal, 55 (2014), no. 4,
-pp. 667-686 (with A. Tolstonogov).</p></li>
-<li><p><a href="https://epubs.siam.org/doi/abs/10.1137/12087791X">On the
-control of moving sets: positive and negative confinement results</a>.
-SIAM J. Control Optim., 51 (2013), no. 1, pp. 380-401 (with R.M.
-Colombo).</p></li>
-<li><p><a
-href="https://epubs.siam.org/doi/abs/10.1137/110854321">Confinement
-strategies in a model for the interaction between individuals and a
-continuum</a>. SIAM J. Appl. Dyn. Syst., 11 (2012), no. 2, pp. 741-770
-(with R.M. Colombo).</p></li>
-<li><p><a
-href="https://link.springer.com/article/10.1134/S0037446606010095">Relaxation
-of the optimal control problem for Goursat-Darboux system</a>. Siberian
-Mathematical Journal, 52 (2011), no. 1, pp. 78-90.</p></li>
-<li><p><a
-href="https://link.springer.com/article/10.1007/s11202-007-0092-3">On
-the properties of solutions to the Goursat-Darboux problem with boundary
-and distributed controls</a>. Siberian Mathematical Journal, 48 (2007),
-no. 5, pp. 897-912.</p></li>
-<li><p><a
-href="https://link.springer.com/article/10.1134/S0012266107080125">On
-solutions of the Goursat-Darboux system with boundary controls and
-distributed controls</a>. Differential Equations, 43 (2007), no. 8,
-pp. 1142-1152.</p></li>
+<li><p><a href="https://iopscience.iop.org/article/10.1070/SM9516/meta">Nonlocal balance equations with parameters in the space of signed measures</a>. Sbornik: Mathematics, 213 (2022), no. 1, pp. 63-87 (with M. Staritsyn)</p></li>
+<li><p><a href="https://ieeexplore.ieee.org/abstract/document/9454440">Feedback Maximum Principle for Ensemble Control of Local Continuity Equations: An Application to Supervised Machine Learning</a>. IEEE Control Syst. Lett., 6 (2021), pp. 1046-1051 (with M. Staritsyn, R. Chertovskih, F.L. Pereira)</p></li>
+<li><p><a href="https://www.aimsciences.org/article/doi/10.3934/dcds.2021066?viewType=html">Modeling of crowds in regions with moving obstacles</a>. Discrete Contin. Dyn. Syst., 41 (2021), no. 14, pp. 5009-5036 (with N. Maltugueva)</p></li>
+<li><p><a href="https://www.sciencedirect.com/science/article/pii/S002203962030108X">Impulsive control of nonlocal transport equations</a>. Journal of Differential Equations, 269 (2020), no. 4, pp. 3585-3623 (with M.V. Staritsyn)</p></li>
+<li><p><a href="https://link.springer.com/article/10.1007/s11590-018-1318-y">Program strategies for a dynamic game in the space of measures</a>. Optimization Letters. 13 (2019), no. 8. pp. 1913-1925.</p></li>
+<li><p><a href="https://link.springer.com/article/10.1007/s10958-019-04298-7">Bang-Bang Theorem for a Coupled ODE-PDE Control System</a>. Journal of Mathematical Sciences 23 (2019), no, 2. pp. 146-158.</p></li>
+<li><p><a href="https://www.sciencedirect.com/science/article/pii/S0022039618302067">Estimates of the Domain of Dependence for Scalar Conservation Laws</a>. Journal of Differential Equations, 265 (2018), no. 4, pp. 1654-1677.</p></li>
+<li><p><a href="https://link.springer.com/article/10.1134/S0012266116080048">On the regularity of the boundary of the integral funnel of a differential inclusion</a>. Differential Equations, 52 (2016), no. 8, pp. 987-999.</p></li>
+<li><p><a href="https://link.springer.com/article/10.1007/s00030-016-0357-2">Optimal control of continuity equations</a>. Nonlinear Differ. Equ. Appl. (2016) 23: 21.</p></li>
+<li><p><a href="http://www.aimsciences.org/article/doi/10.3934/dcds.2015.35.73">On the modeling of moving populations through set evolution equations</a>. Discrete Contin. Dyn. Syst., 35 (2015), no. 1, pp. 73-98 (with R.M. Colombo and T. Lorenz).</p></li>
+<li><p><a href="https://link.springer.com/article/10.1134/S0037446614040090">The variational stability of an optimal control problem for Volterra-type equations</a>. Siberian Mathematical Journal, 55 (2014), no. 4, pp. 667-686 (with A. Tolstonogov).</p></li>
+<li><p><a href="https://epubs.siam.org/doi/abs/10.1137/12087791X">On the control of moving sets: positive and negative confinement results</a>. SIAM J. Control Optim., 51 (2013), no. 1, pp. 380-401 (with R.M. Colombo).</p></li>
+<li><p><a href="https://epubs.siam.org/doi/abs/10.1137/110854321">Confinement strategies in a model for the interaction between individuals and a continuum</a>. SIAM J. Appl. Dyn. Syst., 11 (2012), no. 2, pp. 741-770 (with R.M. Colombo).</p></li>
+<li><p><a href="https://link.springer.com/article/10.1134/S0037446606010095">Relaxation of the optimal control problem for Goursat-Darboux system</a>. Siberian Mathematical Journal, 52 (2011), no. 1, pp. 78-90.</p></li>
+<li><p><a href="https://link.springer.com/article/10.1007/s11202-007-0092-3">On the properties of solutions to the Goursat-Darboux problem with boundary and distributed controls</a>. Siberian Mathematical Journal, 48 (2007), no. 5, pp. 897-912.</p></li>
+<li><p><a href="https://link.springer.com/article/10.1134/S0012266107080125">On solutions of the Goursat-Darboux system with boundary controls and distributed controls</a>. Differential Equations, 43 (2007), no. 8, pp. 1142-1152.</p></li>
 </ol>
 <h2 id="conference-papers">Conference papers</h2>
 <ol start="17" type="1">
-<li><p><em>Optimization in a traffic flow model as an inverse problem in
-the Wasserstein space</em>. Accepted to CAO 2022. (with R. Chertovskih,
-M. Staritsyn, F. L. Pereira)</p></li>
-<li><p><a
-href="https://link.springer.com/chapter/10.1007%2F978-3-030-77876-7_24">Feedback
-Maximum Principle for a Class of Linear Continuity Equations Inspired by
-Optimal Impulsive Control</a>. Lecture Notes in Computer Science: 20th
-Intern. Conf. on Mathematical Optimization Theory and Operations
-Research, MOTOR 2021. 2021. vol. 12755. pp. 356-368 (with M. Staritsyn
-and E. Goncharova)</p></li>
-<li><p><a
-href="https://link.springer.com/chapter/10.1007/978-3-030-22629-9_33">Optimality
-Conditions and Numerical Algorithms for Hybrid Control Systems</a>.
-Lecture Notes in Computer Science: 19th Intern. Conf. on Mathematical
-Optimization Theory and Operations Research, MOTOR 2019. (2019),
-vol. 11548, pp. 474-488 (with N. Maltugueva and O. Samsonyuk)</p></li>
-<li><p><a
-href="https://link.springer.com/chapter/10.1007/978-3-030-10934-9_26">Impulsive
-Relaxation of Continuity Equations and Modeling of Colliding
-Ensembles</a>. Communications in Computer and Information Science: 9th
-Intern. Conf. on Optimization and Applications, OPTIMA 2018. (2019) ,
-vol. 974. pp. 367-381 (with M.V. Staritsyn)</p></li>
-<li><p><a
-href="https://www.sciencedirect.com/science/article/pii/S2405896318332117">Minimum
-time function of a non-autonomous control system</a>. IFAC-PapersOnLine,
-51 (2018), no. 32, pp. 704-707 (with V.A. Voronov)</p></li>
-<li><p><a
-href="https://www.sciencedirect.com/science/article/pii/S2405896318331264">On
-a Class of Impulsive Control Problems for Continuity Equations</a>.
-IFAC-PapersOnLine, 51 (2018), no. 32, pp. 468-473 (with M.V.
-Staritsyn)</p></li>
-<li><p><a href="http://ceur-ws.org/Vol-1987/paper67.pdf">Numerical
-Algorithm for Optimal Control of Continuity Equations</a>. Proc. of 8th
-Intern. Conf. on Optimization and Applications, OPTIMA-2017,
-pp. 467-474.</p></li>
-<li><p><a
-href="https://publik.tuwien.ac.at/files/PubDat_228935.pdf">Conservation
-laws in the modeling of moving crowds</a>. AIMS Series on Applied
-Mathematics: Proc. of the 14th International Conference “Hyperbolic
-Problems: Theory, Numerics, Applications (2014), vol. 8, pp. 467-474
-(with R.M. Colombo, M. Garavello, M. Lecureux-Mercier)</p></li>
+<li><p><a href="https://www.sciencedirect.com/science/article/pii/S2405896322011673">Optimization in a traffic flow model as an inverse problem in the Wasserstein space</a>. IFAC-PapersOnLine, 55 (2022), no. 16, pp. 32-37 (with R. Chertovskih, M. Staritsyn, F. L. Pereira)</p></li>
+<li><p><a href="https://link.springer.com/chapter/10.1007%2F978-3-030-77876-7_24">Feedback Maximum Principle for a Class of Linear Continuity Equations Inspired by Optimal Impulsive Control</a>. Lecture Notes in Computer Science: 20th Intern. Conf. on Mathematical Optimization Theory and Operations Research, MOTOR 2021. 2021. vol. 12755. pp. 356-368 (with M. Staritsyn and E. Goncharova)</p></li>
+<li><p><a href="https://link.springer.com/chapter/10.1007/978-3-030-22629-9_33">Optimality Conditions and Numerical Algorithms for Hybrid Control Systems</a>. Lecture Notes in Computer Science: 19th Intern. Conf. on Mathematical Optimization Theory and Operations Research, MOTOR 2019. (2019), vol. 11548, pp. 474-488 (with N. Maltugueva and O. Samsonyuk)</p></li>
+<li><p><a href="https://link.springer.com/chapter/10.1007/978-3-030-10934-9_26">Impulsive Relaxation of Continuity Equations and Modeling of Colliding Ensembles</a>. Communications in Computer and Information Science: 9th Intern. Conf. on Optimization and Applications, OPTIMA 2018. (2019) , vol. 974. pp. 367-381 (with M.V. Staritsyn)</p></li>
+<li><p><a href="https://www.sciencedirect.com/science/article/pii/S2405896318332117">Minimum time function of a non-autonomous control system</a>. IFAC-PapersOnLine, 51 (2018), no. 32, pp. 704-707 (with V.A. Voronov)</p></li>
+<li><p><a href="https://www.sciencedirect.com/science/article/pii/S2405896318331264">On a Class of Impulsive Control Problems for Continuity Equations</a>. IFAC-PapersOnLine, 51 (2018), no. 32, pp. 468-473 (with M.V. Staritsyn)</p></li>
+<li><p><a href="http://ceur-ws.org/Vol-1987/paper67.pdf">Numerical Algorithm for Optimal Control of Continuity Equations</a>. Proc. of 8th Intern. Conf. on Optimization and Applications, OPTIMA-2017, pp. 467-474.</p></li>
+<li><p><a href="https://publik.tuwien.ac.at/files/PubDat_228935.pdf">Conservation laws in the modeling of moving crowds</a>. AIMS Series on Applied Mathematics: Proc. of the 14th International Conference “Hyperbolic Problems: Theory, Numerics, Applications (2014), vol. 8, pp. 467-474 (with R.M. Colombo, M. Garavello, M. Lecureux-Mercier)</p></li>
 </ol>
 <h2 id="other-papers-in-russian">Other papers (in Russian)</h2>
 <ol start="25" type="1">
-<li><p><a
-href="http://www.mathnet.ru/php/archive.phtml?wshow=paper&amp;jrnid=iigum&amp;paperid=441&amp;option_lang=eng">Optimization
-of impulsive control systems with intermediate state constraints</a>.
-The Bulletin of Irkutsk State University. Series Mathematics, 35 (2021),
-18-33. (with N. Maltugueva, O. Samsonyuk)</p></li>
-<li><p><a
-href="http://www.mathnet.ru/php/archive.phtml?wshow=paper&amp;jrnid=iigum&amp;paperid=350&amp;option_lang=eng">Impulsive
-control of systems with network structure describing spread of political
-influence</a>. The Bulletin of Irkutsk State University. Series
-Mathematics, 25 (2018), 126-143. (with M. Staritsyn, N. Maltugueva, S.
-Sorokin)</p></li>
-<li><p><a
-href="http://www.mathnet.ru/php/archive.phtml?wshow=paper&amp;jrnid=iigum&amp;paperid=292&amp;option_lang=eng">Existence
-of solutions to an optimal control problem for a hybrid system</a> The
-Bulletin of Irkutsk State University. Series Mathematics, 19 (2017),
-129-135. (with N. Maltugueva)</p></li>
-<li><p><a
-href="http://www.mathnet.ru/php/archive.phtml?wshow=paper&amp;jrnid=sjim&amp;paperid=491&amp;option_lang=rus">On
-solutions of the Goursat-Darboux inclusion with mixed boundary and
-distributed control constraints</a>. Siberian Journal of Industrial
-Mathematics, 11 (2008), no. 1, pp. 96-110.</p></li>
+<li><p><a href="http://www.mathnet.ru/php/archive.phtml?wshow=paper&amp;jrnid=iigum&amp;paperid=441&amp;option_lang=eng">Optimization of impulsive control systems with intermediate state constraints</a>. The Bulletin of Irkutsk State University. Series Mathematics, 35 (2021), 18-33. (with N. Maltugueva, O. Samsonyuk)</p></li>
+<li><p><a href="http://www.mathnet.ru/php/archive.phtml?wshow=paper&amp;jrnid=iigum&amp;paperid=350&amp;option_lang=eng">Impulsive control of systems with network structure describing spread of political influence</a>. The Bulletin of Irkutsk State University. Series Mathematics, 25 (2018), 126-143. (with M. Staritsyn, N. Maltugueva, S. Sorokin)</p></li>
+<li><p><a href="http://www.mathnet.ru/php/archive.phtml?wshow=paper&amp;jrnid=iigum&amp;paperid=292&amp;option_lang=eng">Existence of solutions to an optimal control problem for a hybrid system</a> The Bulletin of Irkutsk State University. Series Mathematics, 19 (2017), 129-135. (with N. Maltugueva)</p></li>
+<li><p><a href="http://www.mathnet.ru/php/archive.phtml?wshow=paper&amp;jrnid=sjim&amp;paperid=491&amp;option_lang=rus">On solutions of the Goursat-Darboux inclusion with mixed boundary and distributed control constraints</a>. Siberian Journal of Industrial Mathematics, 11 (2008), no. 1, pp. 96-110.</p></li>
 </ol>
-<div class="sourceCode" id="cb1"><pre
-class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>

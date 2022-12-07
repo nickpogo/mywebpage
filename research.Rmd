@@ -45,7 +45,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Conference papers
 
-17. *Optimization in a traffic flow model as an inverse problem in the Wasserstein space*. Accepted to CAO 2022. (with R. Chertovskih, M. Staritsyn, F. L. Pereira)
+17. [Optimization in a traffic flow model as an inverse problem in the Wasserstein space](https://www.sciencedirect.com/science/article/pii/S2405896322011673). IFAC-PapersOnLine, 55 (2022), no. 16, pp. 32-37 (with R. Chertovskih, M. Staritsyn, F. L. Pereira)
 
 18. [Feedback Maximum Principle for a Class of Linear Continuity Equations Inspired by Optimal Impulsive Control](https://link.springer.com/chapter/10.1007\%2F978-3-030-77876-7_24). Lecture Notes in Computer Science: 20th Intern. Conf. on Mathematical Optimization Theory and Operations Research, MOTOR 2021. 2021. vol. 12755. pp. 356-368 (with M. Staritsyn and E. Goncharova)
 

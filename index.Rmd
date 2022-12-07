@@ -18,13 +18,17 @@ knitr::opts_chunk$set(echo = FALSE)
 :::: {style="display: grid; grid-template-columns: 75% 25%; grid-column-gap: 0%;  align-items: center;"}
 ::: {}
  <font size="2"> 
-**Emails:**\
-n 'dot' pogodaev 'at' icc 'dot' ru\
+**Email:**\
+<!-- n 'dot' pogodaev 'at' icc 'dot' ru\ -->
 nickpogo 'at' gmail 'dot' com\
 **Address:**\
-[Matrosov Institute for System Dynamics and Control Theory](http://idstu.irk.ru/)\
+[Università degli Studi di Padova](https://www.unipd.it/)\
+[Dipartimento di matematica "Tullio Levi-Civita"](https://www.math.unipd.it/)\
+Via Trieste, 63 - 35121 Padova
+
+<!--[Matrosov Institute for System Dynamics and Control Theory](http://idstu.irk.ru/)\
 134 Lermontov Street,\
-664033 Irkutsk, Russia
+664033 Irkutsk, Russia-->
 </font>
 :::
 ::: {}
@@ -32,4 +36,5 @@ nickpogo 'at' gmail 'dot' com\
 :::
 ::::
 ---
-I am a senior research fellow at [Matrosov Institute for System Dynamics and Control Theory](http://idstu.irk.ru/) (Irkutsk, Russia). My primary research interest is mathematical control theory, especially, when it deals with PDEs and mingles with optimal transportation. Doing my Ph.D. made me appreciate set-valued analysis and my postdoc research gave me a taste of geometric measure theory and nonlinear conservation laws. When I'm getting tired of proving theorems, I do some programming for tackling optimal control problems by numerical tools.
+Currently I am a research fellow at [Università degli Studi di Padova](https://www.unipd.it/) (Padua, Italy).
+<!--[Matrosov Institute for System Dynamics and Control Theory](http://idstu.irk.ru/) (Irkutsk, Russia)--> My primary research interest is mathematical control theory, especially, when it deals with PDEs and mingles with optimal transportation. Doing my Ph.D. made me appreciate set-valued analysis and my postdoc research gave me a taste of geometric measure theory and nonlinear conservation laws. When I'm getting tired of proving theorems, I do some programming for tackling optimal control problems by numerical tools.
