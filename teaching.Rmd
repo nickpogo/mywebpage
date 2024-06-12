@@ -7,6 +7,9 @@ site: distill::distill_website
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+- Exercises for the Bachelor course **Analysis I**\
+Univesità degli Studi di Padova (2023)
+
 - Lectures for the Bachelor course **Optimization**\
 Irkutsk State University (2015)
 
@@ -19,6 +22,6 @@ Irkutsk State University (2016-2019)
 - Exercise classes for the Bachelor course **Convex programming**\
 Irkutsk State University (2017)
 
-### Semenar notes
+### Seminar notes
 - [Parallel sets](./files/parallel.pdf)
 - [Optimal transport (in progress)](./files/wasserestein_short.pdf)
